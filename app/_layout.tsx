@@ -8,6 +8,11 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import '../global.css'
+import {GestureHandlerRootView} from "react-native-gesture-handler";
+import {Provider} from "react-redux";
+import {PersistGate} from "redux-persist/integration/react";
+import {persistor, store} from "@/api/store/store";
+import {Toaster} from 'sonner-native'
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -42,9 +47,19 @@ export default function RootLayout() {
   }
 
   return (
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <GestureHandlerRootView style={{flex: 1}}>
     <View className={'flex-1 '}>
       <Slot/>
       <StatusBar style="auto" />
     </View>
+            <Toaster position="top-center" duration={6000} richColors={true}
+
+            />
+            <StatusBar style="auto"/>
+          </GestureHandlerRootView>
+        </PersistGate>
+      </Provider>
   );
 }

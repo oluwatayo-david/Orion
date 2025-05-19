@@ -13,10 +13,10 @@ import Analytics from "@/assets/svgs/analytics";
 import OrionIcon from "@/assets/svgs/orionIcon";
 import Savings from "@/assets/svgs/savings";
 import CardIcon from "@/assets/svgs/card";
-
+import {useRouter} from "expo-router";
 export default function TabLayout() {
     const colorScheme = useColorScheme();
-
+const router = useRouter()
     return (
         <Tabs
             screenOptions={{
@@ -122,12 +122,12 @@ export default function TabLayout() {
 
             {/* Savings Tab */}
             <Tabs.Screen
-                name="savings"
+                name="emptysavings"
                 options={{
                     tabBarLabelStyle: {
                         marginTop:5
                     },
-                    title: 'Savings',
+                    title: 'savings',
                     tabBarIcon: ({ focused }) => (
                         <View
                             style={{
@@ -139,6 +139,13 @@ export default function TabLayout() {
                             <Savings height={30} width={30} fill={focused ? "#ffffff" : "#000000"} iconFill={focused ? "#ffffff" : "#000000"} />
                         </View>
                     ),
+                }}
+
+                listeners={{
+                    tabPress: (e) => {
+                        e.preventDefault();
+                        router.push('/savings')
+                    }
                 }}
             />
         </Tabs>

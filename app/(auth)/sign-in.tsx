@@ -18,7 +18,8 @@ import {toast} from "sonner-native";
 
 import * as LocalAuthentication from "expo-local-authentication";
 import OrionLogo from "@/assets/svgs/orionLogo";
-
+import {useAuth} from "@/api/hooks/useAuth";
+import Loader from "@/components/ui/Loader";
 export default function SignInScreen() {
     const [biomertricLoading, seBiometricLoading] = useState(false)
     const {control, handleSubmit} = useForm<FormData>({
@@ -31,7 +32,8 @@ export default function SignInScreen() {
     const   token = true
     const {Bold, SemiBold} = generalSans
     const router = useRouter();
-
+    const [loading , setLoading] = useState(false)
+ const { login} = useAuth()
     const handleBiometricAuth = async () => {
         try {
 
@@ -71,16 +73,20 @@ export default function SignInScreen() {
         }
     };
 
-    const onSubmit = async (data) => {
+    const onSubmit = async (data: any) => {
         try {
             const {email, password} = data;
-
+            console.log(email , password)
+            setLoading(true)
+            await  login({email , password})
             toast.success("Login successful!");
             router.replace("/(tabs)");
 
             console.log("Token from mmkv:", token);
-        } catch (e) {
+        } catch (e:any) {
             toast.error(e.message || "An error occurred during login.");
+        }finally {
+            setLoading(false)
         }
     };
 
@@ -133,7 +139,7 @@ export default function SignInScreen() {
                             <View className="mt-8 flex-row gap-2 justify-center items-center mb-32 w-full">
 
 
-                                <TouchableOpacity className={' bg-primary py-4   rounded-lg  flex-1 '} onPress={()=> router.push('/(tabs)')}>
+                                <TouchableOpacity className={' bg-primary py-4   rounded-lg  flex-1 '} onPress={handleSubmit(onSubmit)}>
                                     <Text className={'text-white text-center text-lg'}>Login</Text>
 
                                 </TouchableOpacity>
@@ -161,7 +167,7 @@ export default function SignInScreen() {
                             </View>
                         </View>
 
-
+<Loader loading={loading}/>
                     </ScrollView>
                 </SafeAreaView>
             </KeyboardAvoidingView>
